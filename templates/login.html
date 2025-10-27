@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Mock Login</h2>
+  <form method="post">
+    <label>Username <input name="username" placeholder="e.g., testuser"></label>
+    <button type="submit">Log In</button>
+  </form>
+  <p><em>No passwords; this just stores your username in session.</em></p>
+{% endblock %}

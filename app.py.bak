@@ -1,0 +1,73 @@
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from markupsafe import escape
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'dev-only-key'  # needed for flash/session per slides
+# (purely for demo; not secure) :contentReference[oaicite:7]{index=7}
+
+# --- Mock data (pretend listings) ---
+LISTINGS = [
+    {"id": 1, "title": "Sunny Studio", "price": 89, "city": "San Jose", "thumb": "https://placehold.co/300x200"},
+    {"id": 2, "title": "Cozy Loft",     "price": 129,"city": "Santa Clara","thumb": "https://placehold.co/300x200"},
+    {"id": 3, "title": "Downtown 1BR",  "price": 149,"city": "San Francisco","thumb": "https://placehold.co/300x200"},
+]
+
+# --- Routes ---
+
+@app.route("/")
+def home():
+    return render_template("home.html", title="Home")
+
+@app.route("/listings")
+def listings():
+    return render_template("listings.html", title="Listings", listings=LISTINGS)
+
+@app.route("/listing/<int:lid>")
+def detail(lid):
+    listing = next((l for l in LISTINGS if l["id"] == lid), None)
+    if not listing:
+        flash("Listing not found.")
+        return redirect(url_for("listings"))
+    return render_template("detail.html", title=listing["title"], listing=listing)
+
+@app.route("/login", methods=["GET","POST"])
+def login():
+    if request.method == "POST":
+        username = request.form.get("username","").strip()
+        if username:
+            session["username"] = username
+            flash(f"Logged in as {escape(username)}")
+            return redirect(url_for("dashboard"))
+        flash("Please enter a username.")
+    return render_template("login.html", title="Login")
+
+@app.route("/logout")
+def logout():
+    session.pop("username", None)
+    flash("Logged out.")
+    return redirect(url_for("home"))
+
+@app.route("/dashboard")
+def dashboard():
+    if "username" not in session:
+        flash("Please log in first.")
+        return redirect(url_for("login"))
+    return render_template("dashboard.html", title="Dashboard", username=session["username"])
+
+@app.route("/book/<int:lid>", methods=["POST"])
+def book(lid):
+    # pretend to "book" (no DB); echo back form inputs
+    if "username" not in session:
+        flash("Please log in before booking.")
+        return redirect(url_for("login"))
+    listing = next((l for l in LISTINGS if l["id"] == lid), None)
+    if not listing:
+        flash("Listing not found.")
+        return redirect(url_for("listings"))
+    nights = request.form.get("nights","1")
+    note = request.form.get("note","")
+    return render_template("booking_success.html", title="Booked!", listing=listing,
+                           username=session["username"], nights=nights, note=note)
+
+if __name__ == "__main__":
+    app.run(debug=True)

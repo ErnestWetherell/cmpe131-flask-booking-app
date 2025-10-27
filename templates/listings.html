@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Listings</h2>
+  <div class="grid">
+    {% for l in listings %}
+      <a class="card" href="{{ url_for('detail', lid=l.id) }}">
+        <img src="{{ l.thumb }}" alt="{{ l.title }}">
+        <div>
+          <strong>{{ l.title }}</strong><br>
+          {{ l.city }} • ${{ l.price }}/night
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+{% endblock %}

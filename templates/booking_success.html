@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Booking Confirmed 🎉</h2>
+  <p>{{ username }}, you booked <strong>{{ listing.title }}</strong> in {{ listing.city }}
+     for {{ nights }} night(s).</p>
+  {% if note %}<p>Note: {{ note }}</p>{% endif %}
+  <p><a href="{{ url_for('listings') }}">Back to listings</a></p>
+{% endblock %}

@@ -1,0 +1,6 @@
+body { font-family: system-ui, Arial, sans-serif; margin: 24px; }
+nav a { margin-right: 12px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.card { border: 1px solid #ddd; padding: 8px; text-decoration: none; color: inherit; display: block; }
+.card img { width: 100%; height: auto; display: block; }
+.flash { color: #064; }

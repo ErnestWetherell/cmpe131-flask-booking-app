@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>{{ listing.title }}</h2>
+  <img src="{{ listing.thumb }}" alt="{{ listing.title }}">
+  <p>{{ listing.city }} • ${{ listing.price }}/night</p>
+  <hr>
+  <h3>Book this stay</h3>
+  <form method="post" action="{{ url_for('book', lid=listing.id) }}">
+    <label>Nights <input type="number" name="nights" min="1" value="1"></label><br>
+    <label>Note <input type="text" name="note" placeholder="Anything we should know?"></label><br>
+    <button type="submit">Book</button>
+  </form>
+{% endblock %}
